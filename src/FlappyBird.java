@@ -1,15 +1,21 @@
 // Imports for creating GUI components
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 // Creating class 'FlappyBird' that can be added to JFrame
-public class FlappyBird extends JPanel {
+public class FlappyBird extends JPanel implements ActionListener{
     // Define size of game window
     public static final int BOARD_WIDTH = 360;
     public static final int BOARD_HEIGHT = 640;
 
     // Bird instance as member variable
     private Bird bird;
+
+    // Define gravity and timer
+    private Timer gameLoop;
+    private int gravity = 1;
 
     // Constructor of flappy bird class
     public FlappyBird(){
@@ -24,6 +30,10 @@ public class FlappyBird extends JPanel {
         int birdY = BOARD_HEIGHT / 2;
         Color birdColor = Color.YELLOW;
         bird = new Bird(birdX, birdY, birdWidth, birdHeight, birdColor);
+
+        // Set up and start game loop
+        gameLoop = new Timer(1000 / 60, this); // Fires an event 60 times per second
+        gameLoop.start();
     }
 
     @Override
@@ -31,7 +41,18 @@ public class FlappyBird extends JPanel {
         super.paintComponent(g);
         bird.draw(g);
     }
-    
+
+    // Method called every time the timer 'ticks'
+    @Override
+    public void actionPerformed(ActionEvent e){
+        // Apply gravity to the bird's velocity
+        bird.setyVelocity(bird.getYVelocity() + gravity);
+        // Update bird's position
+        bird.update();
+        // Redraw the panel
+        repaint();
+    }
+
     // Main method of game
     public static void main(String[] args){
         JFrame frame = new JFrame("Flappy Bird"); // Create a new frame with title 'Flappy Bird'

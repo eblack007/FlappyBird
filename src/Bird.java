@@ -47,4 +47,9 @@ public class Bird {
     public int getYVelocity(){
         return yVelocity;
     }
+
+    public void flap(){
+        // Set a strong negative velovity to make bird move up
+        setyVelocity(-9);
+    }
 }

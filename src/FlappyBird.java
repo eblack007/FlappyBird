@@ -30,7 +30,7 @@ public class FlappyBird extends JPanel implements ActionListener{
 
     // Pipe properties
     private int pipeWidth = 60;
-    private int pipeGap = 150;
+    private int pipeGap = 125;
     private int pipeVelocityX = 4;
 
     // Add gameover flag
@@ -42,12 +42,22 @@ public class FlappyBird extends JPanel implements ActionListener{
     // Game started flag
     private boolean gameStarted = false;
 
+    // Image variables
+    private Image birdImage;
+    private Image pipeTopImage;
+    private Image pipeBottomImage;
+
     // Constructor of flappy bird class
     public FlappyBird(){
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT)); // sets preferred size of the panel
         setBackground(Color.cyan); // sets background colour of the panel
         setFocusable(true); // Allows panel to receive keyboard input
-        addKeyListener(new MyKeyAdapter()); 
+        addKeyListener(new MyKeyAdapter());
+
+        // Load images
+        birdImage = new ImageIcon(getClass().getResource("/images/bird.png")).getImage();
+        pipeTopImage = new ImageIcon(getClass().getResource("/images/tube_top.png")).getImage();
+        pipeBottomImage = new ImageIcon(getClass().getResource("/images/tube_bottom.png")).getImage();
 
         setupGame();
     }
@@ -60,8 +70,8 @@ public class FlappyBird extends JPanel implements ActionListener{
         int birdHeight = 24;
         int birdX = BOARD_WIDTH / 8;
         int birdY = BOARD_HEIGHT / 2;
-        Color birdColor = Color.YELLOW;
-        bird = new Bird(birdX, birdY, birdWidth, birdHeight, birdColor);
+
+        bird = new Bird(birdX, birdY, birdWidth, birdHeight, birdImage);
 
         // Initialise pipes list
         pipes = new ArrayList<Pipe>();
@@ -88,7 +98,7 @@ public class FlappyBird extends JPanel implements ActionListener{
         int birdX = BOARD_WIDTH / 8;
         int birdY = BOARD_HEIGHT / 2;
         
-        bird = new Bird(birdX, birdY, bird.hitbox.width, bird.hitbox.height, Color.yellow);
+        bird = new Bird(birdX, birdY, bird.hitbox.width, bird.hitbox.height, birdImage);
 
         // Stop the timers
         gameLoop.stop();
@@ -107,7 +117,7 @@ public class FlappyBird extends JPanel implements ActionListener{
         int topHeight = randomPipeY;
         int bottomHeight = BOARD_HEIGHT - topHeight - pipeGap;
 
-        Pipe newPipe = new Pipe(BOARD_HEIGHT, 0, pipeWidth, pipeGap, topHeight, bottomHeight, Color.GREEN);
+        Pipe newPipe = new Pipe(BOARD_HEIGHT, 0, pipeWidth, pipeGap, topHeight, bottomHeight, pipeTopImage, pipeBottomImage);
         pipes.add(newPipe);
     }
 

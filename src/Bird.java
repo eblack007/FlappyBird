@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Image;
 
 // Create Bird class
 public class Bird {
@@ -10,7 +11,7 @@ public class Bird {
     private  int y;
     private int width;
     private int height;
-    private Color color;
+    private Image image;
 
     // Add variable for vertical velocity
     private int yVelocity;
@@ -19,20 +20,19 @@ public class Bird {
     public Rectangle hitbox;
 
     // Constructor for Bird class
-    public Bird(int x, int y, int width, int height, Color color){
+    public Bird(int x, int y, int width, int height, Image image){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.image = image;
         this.yVelocity = 0;
         this.hitbox = new Rectangle(x, y, width, height); // Initialise hitbox
     }
 
     // Method used to draw the bird
     public void draw(Graphics g){ // take in a Graphics object from from Swing
-        g.setColor(color);
-        g.fillRect(x, y, width, height); // Draw a rectangle at birds x and y coordinates
+        g.drawImage(image, x, y, width, height, null); // Draw image at birds x and y coordinates
     }
 
     // Method to update birds position based on it vertical velocity
@@ -56,6 +56,6 @@ public class Bird {
 
     public void flap(){
         // Set a strong negative velovity to make bird move up
-        setyVelocity(-9);
+        setyVelocity(-7);
     }
 }

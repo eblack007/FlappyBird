@@ -12,9 +12,15 @@ public class Pipe {
     private int gap;
     private Color colour;
 
+
     // Use rectangles for collison detection
     public Rectangle topRectangle;
     public Rectangle bottomRectangle;
+
+    // Variable for scoring system
+    private boolean passed = false;
+
+    
 
     // Constructor for pipe
     public Pipe(int x, int y, int width, int topHeight, int bottomHeight, int gap, Color colour) {
@@ -40,5 +46,13 @@ public class Pipe {
         x -= velocityX;
         topRectangle.x = x;
         bottomRectangle.x = x;
+    }
+
+    public boolean isPassed(){
+        return passed;
+    }
+
+    public void setPassed(boolean passed){
+        this.passed = passed;
     }
 }

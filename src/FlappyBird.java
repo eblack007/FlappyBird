@@ -36,6 +36,9 @@ public class FlappyBird extends JPanel implements ActionListener{
     // Add gameover flag
     private boolean gameOver = false;
 
+    // Score variable
+    private int score = 0;
+
     // Constructor of flappy bird class
     public FlappyBird(){
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT)); // sets preferred size of the panel
@@ -43,6 +46,12 @@ public class FlappyBird extends JPanel implements ActionListener{
         setFocusable(true); // Allows panel to receive keyboard input
         addKeyListener(new MyKeyAdapter()); 
 
+        setupGame();
+    }
+
+
+    //Method to setup game
+    private void setupGame(){
         // Initialise 'Bird' object in constructor
         int birdWidth = 34;
         int birdHeight = 24;
@@ -68,6 +77,23 @@ public class FlappyBird extends JPanel implements ActionListener{
         pipeSpawnTimer.start();
     }
 
+    // Method to reset the game
+    private void resetGame(){
+        gameOver = false;
+        score = 0;
+        pipes.clear();
+
+        // reset birds position and velocity
+        int birdX = BOARD_WIDTH / 8;
+        int birdY = BOARD_HEIGHT / 2;
+        
+        bird = new Bird(birdX, birdY, bird.hitbox.width, bird.hitbox.height, Color.yellow);
+
+        // Restart the timers
+        gameLoop.restart();
+        pipeSpawnTimer.restart();
+    }
+
     // Method to generate and add new pipes
     private void placePipes() {
         int randomPipeY = (int) (random.nextInt(BOARD_HEIGHT / 2) + BOARD_HEIGHT / 4);
@@ -89,11 +115,20 @@ public class FlappyBird extends JPanel implements ActionListener{
             pipe.draw(g);
         }
 
-        // Game over message if the game ends
-        if (gameOver) {
+        // Draw score
+        g.setColor(Color.white);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        if (!gameOver){
+            g.drawString(String.valueOf(score), 10, 35);
+        } else {
+            // Game over message if the game ends
+            g.drawString("Score: " + String.valueOf(score), 10, 35);           
             g.setColor(Color.red);
             g.setFont(new Font("Arial", Font.BOLD, 50));
-            g.drawString("Game Over", BOARD_WIDTH / 2 - 120, BOARD_HEIGHT /2);
+            g.drawString("Game Over", BOARD_WIDTH / 2 - 120, BOARD_HEIGHT / 2);
+            g.setColor(Color.black);
+            g.setFont(new Font("Arial", Font.BOLD, 20));
+            g.drawString("Press 'R' to restart", BOARD_WIDTH / 2 - 75, BOARD_HEIGHT / 2 + 50);
         }
     }
 
@@ -110,6 +145,12 @@ public class FlappyBird extends JPanel implements ActionListener{
             // move all pipes
             for (Pipe pipe : pipes) {
                 pipe.move(pipeVelocityX);
+
+                // Score logic
+                if (bird.hitbox.x > pipe.topRectangle.x + pipe.topRectangle.width && !pipe.isPassed()){
+                    score++;
+                    pipe.setPassed(true);
+                }
                 // Check for collision with pipe
                 if (bird.hitbox.intersects(pipe.topRectangle) || bird.hitbox.intersects(pipe.bottomRectangle)) {
                     gameOver = true;
@@ -138,6 +179,11 @@ public class FlappyBird extends JPanel implements ActionListener{
             // Check if pressed key is the space bar
             if (e.getKeyCode() == KeyEvent.VK_SPACE);
             bird.flap();
+
+            // Restart logic
+            if (e.getKeyCode() == KeyEvent.VK_R && gameOver){
+                resetGame();
+            }
         }
     }
 

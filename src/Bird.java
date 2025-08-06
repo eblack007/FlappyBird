@@ -1,6 +1,7 @@
 // Imports
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 // Create Bird class
 public class Bird {
@@ -14,6 +15,9 @@ public class Bird {
     // Add variable for vertical velocity
     private int yVelocity;
 
+    // Add rectangle for bird hitbox
+    public Rectangle hitbox;
+
     // Constructor for Bird class
     public Bird(int x, int y, int width, int height, Color color){
         this.x = x;
@@ -22,6 +26,7 @@ public class Bird {
         this.height = height;
         this.color = color;
         this.yVelocity = 0;
+        this.hitbox = new Rectangle(x, y, width, height); // Initialise hitbox
     }
 
     // Method used to draw the bird
@@ -33,6 +38,7 @@ public class Bird {
     // Method to update birds position based on it vertical velocity
     public void update(){
         y += yVelocity;
+        hitbox.y = y; // Update hitbox position to match birds position
     }
 
     // Getter and setters for y and yVelocity

@@ -33,6 +33,9 @@ public class FlappyBird extends JPanel implements ActionListener{
     private int pipeGap = 150;
     private int pipeVelocityX = 4;
 
+    // Add gameover flag
+    private boolean gameOver = false;
+
     // Constructor of flappy bird class
     public FlappyBird(){
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT)); // sets preferred size of the panel
@@ -85,19 +88,43 @@ public class FlappyBird extends JPanel implements ActionListener{
         for (Pipe pipe : pipes) {
             pipe.draw(g);
         }
+
+        // Game over message if the game ends
+        if (gameOver) {
+            g.setColor(Color.red);
+            g.setFont(new Font("Arial", Font.BOLD, 50));
+            g.drawString("Game Over", BOARD_WIDTH / 2 - 120, BOARD_HEIGHT /2);
+        }
     }
 
     // Method called every time the timer 'ticks'
     @Override
     public void actionPerformed(ActionEvent e){
-        // Apply gravity to the bird's velocity
-        bird.setyVelocity(bird.getYVelocity() + gravity);
-        // Update bird's position
-        bird.update();
+        // Check game is not over
+        if (!gameOver){
+            // Apply gravity to the bird's velocity
+            bird.setyVelocity(bird.getYVelocity() + gravity);
+            // Update bird's position
+            bird.update();
 
-        // move all pipes
-        for (Pipe pipe : pipes) {
-            pipe.move(pipeVelocityX);
+            // move all pipes
+            for (Pipe pipe : pipes) {
+                pipe.move(pipeVelocityX);
+                // Check for collision with pipe
+                if (bird.hitbox.intersects(pipe.topRectangle) || bird.hitbox.intersects(pipe.bottomRectangle)) {
+                    gameOver = true;
+                    // Stop the timers
+                    gameLoop.stop();
+                    pipeSpawnTimer.stop();
+                }
+            }
+
+            // Check for collision with ground
+            if (bird.getY() >= BOARD_HEIGHT - bird.hitbox.height || bird.getY() < 0) {
+                gameOver = true;
+                gameLoop.stop();
+                pipeSpawnTimer.stop();
+            }
         }
 
         // Redraw the panel
